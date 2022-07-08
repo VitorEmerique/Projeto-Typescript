@@ -5,11 +5,17 @@ let botaoLimpar = document.getElementById('limpar-saldo');
 let soma = document.getElementById('soma');
 let campoSaldo = document.getElementById('campo-saldo');
 let saldoTotal = 0;
+if (campoSaldo) {
+    campoSaldo.innerHTML = saldoTotal.toString();
+}
 function somarAoSaldo(soma) {
     if (campoSaldo) {
         saldoTotal += soma;
         campoSaldo.innerHTML = saldoTotal.toString();
         limparCampoSaldo();
+    }
+    if (campoSaldo) {
+        campoSaldo.innerHTML = saldoTotal.toString();
     }
 }
 function limparCampoSaldo() {
@@ -19,16 +25,19 @@ function limparSaldo() {
     if (campoSaldo) {
         saldoTotal = 0;
         campoSaldo.innerHTML = saldoTotal.toString();
+        limparCampoSaldo();
+    }
+    if (campoSaldo) {
+        campoSaldo.innerHTML = saldoTotal.toString();
     }
 }
-if (botaoAtualizar) {
-    botaoAtualizar.addEventListener('click', function () {
-        somarAoSaldo(Number(soma.value));
-        console.log(Number(soma.value));
-    });
-}
+botaoAtualizar.addEventListener('click', function () {
+    somarAoSaldo(Number(soma.value));
+    console.log(Number(soma.value));
+});
 botaoLimpar.addEventListener('click', function () {
-    limparCampoSaldo();
+    soma.value = '0';
+    console.log(Number(soma.value));
 });
 /**
     <h4>Valor a ser adicionado: <input id="soma"> </h4>

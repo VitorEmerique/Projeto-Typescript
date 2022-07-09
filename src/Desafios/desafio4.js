@@ -30,6 +30,7 @@ loginButton.addEventListener("click", () => __awaiter(void 0, void 0, void 0, fu
     yield logar();
     yield criarSessao();
     yield pegarInformacoesDaConta();
+    showMessage('alert', 'Login com sucesso');
 }));
 function preencherSenha() {
     password = document.getElementById('senha').value;
@@ -51,6 +52,24 @@ function validateLoginButton() {
         loginButton.disabled = true;
     }
 }
+searchButton.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
+    let lista = document.getElementById("lista");
+    if (lista) {
+        lista.outerHTML = "";
+    }
+    let query = document.getElementById('search');
+    let listaDeFilmes;
+    listaDeFilmes = yield procurarFilme(query);
+    let ul = document.createElement('ul');
+    ul.id = "lista";
+    for (const item of listaDeFilmes.result) {
+        let li = document.createElement('li');
+        li.appendChild(document.createTextNode(item.original_title));
+        ul.appendChild(li);
+    }
+    console.log(listaDeFilmes);
+    searchContainer.appendChild(ul);
+}));
 class HttpClient {
     static get({ url, method, body = null }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -83,23 +102,27 @@ class HttpClient {
         });
     }
 }
-// async function procurarFilme(query: string) {
-//   query = encodeURI(query)
-//   console.log(query)
-//   let result = await HttpClient.get({
-//     url: `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`,
-//     method: "GET"
-//   })
-//   return result
-// }
-// async function adicionarFilme(filmeId:any) {
-//   filmeId = encodeURI(filmeId )
-//   let result = await HttpClient.get({
-//     url: `https://api.themoviedb.org/3/movie/${filmeId}?api_key=${apiKey}&language=pt-BR`,
-//     method: "GET"
-//   })
-//   console.log(result);
-// }
+function procurarFilme(query) {
+    return __awaiter(this, void 0, void 0, function* () {
+        query = encodeURI(query);
+        console.log(query);
+        let result = yield HttpClient.get({
+            url: `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`,
+            method: "GET"
+        });
+        return result;
+    });
+}
+function adicionarFilme(filmeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        filmeId = encodeURI(filmeId);
+        let result = yield HttpClient.get({
+            url: `https://api.themoviedb.org/3/movie/${filmeId}?api_key=${apiKey}&language=pt-BR`,
+            method: "GET"
+        });
+        console.log(result);
+    });
+}
 function criarRequestToken() {
     return __awaiter(this, void 0, void 0, function* () {
         let result = yield HttpClient.get({
@@ -133,35 +156,41 @@ function criarSessao() {
         sessionId = result.session_id;
     });
 }
-// async function criarLista(nomeDaLista, descricao) {
-//   let result = await HttpClient.get({
-//     url: `https://api.themoviedb.org/3/list?api_key=${apiKey}&session_id=${sessionId}`,
-//     method: "POST",
-//     body: {
-//       name: nomeDaLista,
-//       description: descricao,
-//       language: "pt-br"
-//     }
-//   })
-//   console.log(result);
-// }
-// async function adicionarFilmeNaLista(filmeId, listaId) {
-//   let result = await HttpClient.get({
-//     url: `https://api.themoviedb.org/3/list/${listaId}/add_item?api_key=${apiKey}&session_id=${sessionId}`,
-//     method: "POST",
-//     body: {
-//       media_id: filmeId
-//     }
-//   })
-//   console.log(result);
-// }
-// async function pegarLista() {
-//   let result = await HttpClient.get({
-//     url: `https://api.themoviedb.org/3/list/${listId}?api_key=${apiKey}`,
-//     method: "GET"
-//   })
-//   console.log(result);
-// }
+function criarLista(nomeDaLista, descricao) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let result = yield HttpClient.get({
+            url: `https://api.themoviedb.org/3/list?api_key=${apiKey}&session_id=${sessionId}`,
+            method: "POST",
+            body: {
+                name: nomeDaLista,
+                description: descricao,
+                language: "pt-br"
+            }
+        });
+        console.log(result);
+    });
+}
+function adicionarFilmeNaLista(filmeId, listaId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let result = yield HttpClient.get({
+            url: `https://api.themoviedb.org/3/list/${listaId}/add_item?api_key=${apiKey}&session_id=${sessionId}`,
+            method: "POST",
+            body: {
+                media_id: filmeId
+            }
+        });
+        console.log(result);
+    });
+}
+function pegarLista() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let result = yield HttpClient.get({
+            url: `https://api.themoviedb.org/3/list/${listId}?api_key=${apiKey}`,
+            method: "GET"
+        });
+        console.log(result);
+    });
+}
 function blockLoginForm(disabled) {
     loginInput.disabled = disabled;
     passwordInput.disabled = disabled;
